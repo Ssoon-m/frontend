@@ -8,7 +8,7 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: m7KMwqAFyZs2dcfhtlrosqxj
+  TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
 
 jobs:
   Deploy-Preview-Admin:
@@ -31,7 +31,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -67,7 +67,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
