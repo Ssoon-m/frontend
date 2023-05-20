@@ -31,7 +31,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -67,7 +67,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -83,4 +83,3 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-        
