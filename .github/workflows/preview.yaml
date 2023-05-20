@@ -1,11 +1,13 @@
 name: Vercel Preview Deployment
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
 on:
   push:
     branches-ignore:
       - main
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
 jobs:
   Deploy-Preview-Admin:
     runs-on: ubuntu-latest
@@ -27,7 +29,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build
+        run: turbo run build --token=${{ secrets.VERCEL_TOKEN }} 
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -63,13 +65,13 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build
+        run: turbo run build --token=${{ secrets.VERCEL_TOKEN }} 
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
       - name: Change to admin Directory
-        run: cd apps/admin
+        run: cd apps/web
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
