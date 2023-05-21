@@ -7,19 +7,20 @@ on:
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
+  
 
 jobs:
   Deploy-Preview-Admin:
     runs-on: ubuntu-latest
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 2
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
@@ -51,11 +52,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 2
+        with:
+          fetch-depth: 2
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
