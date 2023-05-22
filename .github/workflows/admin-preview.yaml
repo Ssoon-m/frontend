@@ -2,12 +2,12 @@ name: Vercel Admin Preview
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
     pull_request:
       types: [opened, synchronize]
       paths:
-        - apps/web/**
+        - apps/admin/**
         - packages/**
         - .npmrc
         - .nvmrc
@@ -60,4 +60,3 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-
