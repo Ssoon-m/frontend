@@ -1,22 +1,28 @@
-name: Vercel Preview Deployment
+name: Vercel Admin Preview
 
 on:
   push:
     branches-ignore:
       - main
+      paths:
+      - apps/admin/**
+      - packages/**
+      - .npmrc
+      - .nvmrc
+      - "*.config.js"
+      - .github/workflows/admin-preview.yml
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
-  
 
 jobs:
   Deploy-Preview-Admin:
     runs-on: ubuntu-latest
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-      
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -43,46 +49,6 @@ jobs:
 
       - name: Change to admin Directory
         run: cd apps/admin
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-  Deploy-Preview-Web:
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
-      
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "npm"
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Lint
-        run: yarn lint
-
-      - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Change to admin Directory
-        run: cd apps/web
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
