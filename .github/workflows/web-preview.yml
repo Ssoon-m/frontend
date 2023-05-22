@@ -2,7 +2,7 @@ name: Vercel Web Preview
 
 on:
   push:
-    branches:
+    branches-ignore:
       - main
     pull_request:
       types: [opened, synchronize]
