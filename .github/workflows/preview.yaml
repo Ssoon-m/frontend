@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Lint
+        run: yarn lint
+
       - name: Build
         run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
 
@@ -68,6 +71,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Lint
+        run: yarn lint
 
       - name: Build
         run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
