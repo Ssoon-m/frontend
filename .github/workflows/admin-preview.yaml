@@ -2,7 +2,7 @@ name: Vercel Admin Preview
 
 on:
   push:
-    branches:
+    branches-ignore-ignore:
       - main
     pull_request:
       types: [opened, synchronize]
