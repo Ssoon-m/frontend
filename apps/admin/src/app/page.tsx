@@ -6,6 +6,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>
+        <div>check</div>
         <Button />
         <div className="brandblue ui-brandblue bg-brandblue">
           tttttttttttttttttttttttttttttteeeeeeeeeeeeeeeeeeeeeeeesssssssssstttttttt
@@ -23,7 +24,6 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"

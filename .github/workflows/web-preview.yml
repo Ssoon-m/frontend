@@ -4,13 +4,15 @@ on:
   push:
     branches-ignore:
       - main
+    pull_request:
+      types: [opened, synchronize]
       paths:
-      - apps/admin/**
-      - packages/**
-      - .npmrc
-      - .nvmrc
-      - "*.config.js"
-      - .github/workflows/admin-preview.yml
+        - apps/admin/**
+        - packages/**
+        - .npmrc
+        - .nvmrc
+        - "*.config.js"
+        - .github/workflows/admin-preview.yml
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
