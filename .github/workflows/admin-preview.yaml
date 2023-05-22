@@ -8,15 +8,15 @@ env:
 on:
   push:
     branches: ["main"]
-    pull_request:
-      types: [opened, synchronize]
-      paths:
-        - apps/admin/**
-        - packages/**
-        - .npmrc
-        - .nvmrc
-        - "*.config.js"
-        - .github/workflows/admin-preview.yml
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - apps/admin/**
+      - packages/**
+      - .npmrc
+      - .nvmrc
+      - "*.config.js"
+      - .github/workflows/admin-preview.yml
 
 jobs:
   Deploy-Preview-Admin:
