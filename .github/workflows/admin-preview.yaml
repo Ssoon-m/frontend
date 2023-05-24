@@ -37,20 +37,11 @@ jobs:
           node-version: 18
           cache: "yarn"
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: Lint
         run: yarn lint
 
-      - name: Build
-        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
-
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
-
-      - name: Change to admin Directory
-        run: cd apps/admin
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
