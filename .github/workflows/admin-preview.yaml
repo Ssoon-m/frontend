@@ -1,5 +1,11 @@
 name: Vercel Admin Preview
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
 on:
   push:
     branches: ["main"]
@@ -15,11 +21,8 @@ on:
       - .github/workflows/admin-preview.yml
 
 jobs:
-  Build-Prj:
+  Deploy-Preview-Admin:
     runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -43,16 +46,6 @@ jobs:
 
       - name: Lint
         run: yarn lint
-
-  Deploy-Preview-Admin:
-    needs: Build-Prj
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
