@@ -20,7 +20,7 @@ on:
       - .github/workflows/web-preview.yml
 
 jobs:
-  Deploy-Preview-Web:
+  Build-Prj:
     runs-on: ubuntu-latest
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
@@ -37,11 +37,23 @@ jobs:
           node-version: 18
           cache: "yarn"
 
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build --filter=web... --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        
       - name: Lint
         run: yarn lint
 
+  Deploy-Preview-Web:
+    runs-on: ubuntu-latest
+    steps:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
+
+      - name: Change to admin Directory
+        run: cd apps/web
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
