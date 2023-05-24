@@ -3,8 +3,8 @@ name: Vercel Admin Preview
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  # TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  # TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --filter=admin... --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build --filter=admin...
 
       - name: Lint
         run: yarn lint
