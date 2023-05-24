@@ -42,7 +42,7 @@ jobs:
         run: yarn lint
 
   Deploy-Preview-Admin:
-    needs: build
+    needs: Build-Prj
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
