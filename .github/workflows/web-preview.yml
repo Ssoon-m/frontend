@@ -3,7 +3,7 @@ name: Vercel Web Preview
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

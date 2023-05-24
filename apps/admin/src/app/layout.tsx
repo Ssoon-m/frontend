@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <div>ADMIN!sdfs안녕?df</div>
+      <div>ADMIN!sdfs안변경녕?df</div>
       <body className={inter.className}>{children}</body>
     </html>
   );
