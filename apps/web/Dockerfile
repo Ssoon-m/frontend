@@ -22,7 +22,7 @@ WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
-# 이전 단계에서 생성된 /app/out/json/ 경로의 파일이나 디렉토리를 현재 단계의 작업 디렉토리로 복사하는 역할
+# 이전 단계(builder)에서 생성된 /app/out/json/ 경로의 파일이나 디렉토리를 현재 단계의 작업 디렉토리로 복사하는 역할
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/yarn.lock ./yarn.lock
 RUN yarn install --network-timeout 600000
