@@ -43,7 +43,7 @@ jobs:
         run: yarn lint
 
       - name: Build
-        run: yarn build --prod --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
