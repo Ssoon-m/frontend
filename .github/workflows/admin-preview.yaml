@@ -22,9 +22,6 @@ on:
 jobs:
   Build-Prj:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -45,9 +42,11 @@ jobs:
 
       - name: Lint
         run: yarn lint
-        
+
   Deploy-Preview-Admin:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
     steps:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
