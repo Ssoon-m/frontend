@@ -95,6 +95,8 @@ jobs:
 
       - name: Lint
         run: yarn lint
+    outputs:
+      dependency_cache_key: ${{ needs.Install-Dependencies.outputs.dependency_cache_key }}
 
   Admin-Deploy-Preview:
     needs: [Install-Dependencies, Build-Prj]
@@ -109,7 +111,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+          key: ${{ needs.Build-Prj.outputs.dependency_cache_key }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
