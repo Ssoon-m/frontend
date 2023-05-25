@@ -89,10 +89,10 @@ jobs:
       - name: Lint
         run: yarn lint
     outputs:
-      dependency_cache_key: ${{ needs.Install-Dependencies.outputs.dependency_cache_key }}
+      dependency_cache_key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
 
   Admin-Deploy-Preview:
-    needs: [Install-Dependencies, Build-Prj]
+    needs: [install_dependencies, Build-Prj]
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
