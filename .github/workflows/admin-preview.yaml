@@ -116,6 +116,9 @@ jobs:
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.Build-Prj.outputs.dependency_cache_key }}
+          
+      - name: Build
+        run: yarn build --filter=admin...
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -123,8 +126,7 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --debug --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build
-        run: yarn build --filter=admin...
+      
 
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
