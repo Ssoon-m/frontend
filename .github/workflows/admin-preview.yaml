@@ -39,13 +39,10 @@ jobs:
       - name: Restore node_modules cache
         id: restore_dependencies
         uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ runner.os }}-modules-${{ env.cache-name }}-${{ steps.compute_lockfile_hash.outputs.key }}
+          key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
           restore-keys: |
-            ${{ runner.os }}-modules-${{ env.cache-name }}-
             ${{ runner.os }}-modules-
             ${{ runner.os }}-
 
@@ -54,7 +51,7 @@ jobs:
         run: yarn install
 
     outputs:
-      dependency_cache_key: ${{ runner.os }}-modules-${{ env.cache-name }}-${{ steps.compute_lockfile_hash.outputs.key }}
+      dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
   Build-Prj:
     name: Build
     needs: install_dependencies
