@@ -55,7 +55,6 @@ jobs:
 
     outputs:
       dependency_cache_key: ${{ runner.os }}-modules-${{ env.cache-name }}-${{ steps.compute_lockfile_hash.outputs.key }}
-
   Build-Prj:
     name: Build
     needs: Install-Dependencies
