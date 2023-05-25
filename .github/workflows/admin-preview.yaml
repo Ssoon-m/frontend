@@ -45,7 +45,6 @@ jobs:
 
       - name: Install dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        working-directory: apps/admin
         run: yarn install
 
       - name: Build
