@@ -1,10 +1,10 @@
 name: Vercel Admin Preview
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-  # TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  # TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+# env:
+#   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+#   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
+# TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+# TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 on:
   push:
@@ -53,6 +53,15 @@ jobs:
 
       - name: Lint
         run: yarn lint
+
+  Admin-Deploy-Preview:
+    needs: Admin-Build
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
+    steps:
+      - uses: actions/checkout@v3
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
