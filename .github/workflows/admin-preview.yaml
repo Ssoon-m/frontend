@@ -49,7 +49,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --filter=admin...
+        run: yarn build --filter=ui --filter=admin
 
       - name: Lint
         run: yarn lint
