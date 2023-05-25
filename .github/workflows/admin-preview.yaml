@@ -2,10 +2,7 @@ name: Vercel Admin Preview
 
 env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
-#   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-#   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
-# TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-# TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  BUILD_CACHE_KEY: ${{ github.sha }}
 on:
   push:
     branches: ["main"]
@@ -82,6 +79,13 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.Install-Dependencies.outputs.dependency_cache_key }}
 
+      # - name: Check build cache
+      #   uses: actions/cache@v3
+      #   id: cache_built_packages
+      #   with:
+      #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+      #     key: ${{ env.BUILD_CACHE_KEY }}
+
       - name: Install dependencies
         if: steps.restore_dependencies.outputs.cache-hit != 'true'
         run: yarn install
@@ -101,6 +105,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Check dependency cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ needs.job_build.outputs.dependency_cache_key }}
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
@@ -112,5 +122,3 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-
-
