@@ -54,10 +54,10 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --filter=ui --filter=admin
+        run: turbo run build --filter=ui --filter=admin
 
       - name: Lint
-        run: yarn lint
+        run: turbo run lint
 
   Admin-Deploy-Preview:
     needs: Build-Prj
