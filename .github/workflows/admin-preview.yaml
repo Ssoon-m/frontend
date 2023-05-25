@@ -78,17 +78,21 @@ jobs:
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.Install-Dependencies.outputs.dependency_cache_key }}
+
+      - name: Install Turbo CLI
+        run: npm install --global turbo@latest
+
+      - name: Build
+        run: turbo run build --filter=admin...
+
+      - name: Lint
+        run: turbo run lint
       # - name: Check build cache
       #   uses: actions/cache@v3
       #   id: cache_built_packages
       #   with:
       #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
       #     key: ${{ env.BUILD_CACHE_KEY }}
-      - name: Build
-        run: yarn build --filter=admin...
-
-      - name: Lint
-        run: yarn lint
     outputs:
       dependency_cache_key: ${{ needs.Install-Dependencies.outputs.dependency_cache_key }}
 
