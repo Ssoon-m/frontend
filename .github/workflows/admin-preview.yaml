@@ -24,11 +24,10 @@ jobs:
   Install-Dependencies:
     name: Install Dependencies
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
@@ -56,6 +55,7 @@ jobs:
       - name: Install dependencies
         if: steps.restore_dependencies.outputs.cache-hit != 'true'
         run: yarn install
+
       outputs:
         dependency_cache_key: ${{ runner.os }}-modules-${{ env.cache-name }}-${{ steps.compute_lockfile_hash.outputs.key }}
 
@@ -63,6 +63,7 @@ jobs:
     name: Build
     needs: Install-Dependencies
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -92,7 +93,7 @@ jobs:
         run: yarn lint
 
   Admin-Deploy-Preview:
-    needs: Build-Prj
+    needs: [Install-Dependencies, Build-Prj]
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
