@@ -21,7 +21,7 @@ on:
       - .github/workflows/admin-preview.yml
 
 jobs:
-  Deploy-Preview-Admin:
+  Build-Prj:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -55,7 +55,7 @@ jobs:
         run: yarn lint
 
   Admin-Deploy-Preview:
-    needs: Admin-Build
+    needs: Build-Prj
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
