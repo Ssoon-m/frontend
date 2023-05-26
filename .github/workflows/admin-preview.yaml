@@ -1,7 +1,9 @@
 name: Vercel Admin Preview
 
 env:
-  CACHED_DEPENDENCY_PATHS: "**/node_modules"
+  CACHED_DEPENDENCY_PATHS: |
+    "**/node_modules"
+    node_modules/.cache
   BUILD_CACHE_KEY: ${{ github.sha }}
 on:
   push:
@@ -102,4 +104,3 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-
