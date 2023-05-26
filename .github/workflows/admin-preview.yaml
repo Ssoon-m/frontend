@@ -61,7 +61,7 @@ jobs:
       dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
 
   Admin-Deploy-Preview:
-    needs: [install_dependencies, Build-Prj]
+    needs: Build-Prj
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
