@@ -17,6 +17,7 @@ on:
       - .nvmrc
       - "*.config.js"
       - .github/workflows/admin-preview.yml
+
 jobs:
   job_install_dependencies:
     name: Install dependencies
@@ -47,6 +48,7 @@ jobs:
 
     outputs:
       dependencies_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
+
   Build-Prj:
     name: Build
     needs: job_install_dependencies
@@ -69,14 +71,22 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
+      - name: Check if .next folder changed
+        id: check-next-folder
+        run: |
+          if [[ $(git diff --name-only HEAD~1 HEAD) =~ ^/apps/admin/.next/.*$ ]]; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+
       - name: Restore bundle
+        if: steps.check-next-folder.outputs.changed == 'true'
         id: restore_bundle
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_BUILD_PATH }}
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
-          restore-keys: |
-            build-${{ env.BUILD_CACHE_KEY }}-
 
       - name: Build DEV bundle
         if: steps.restore_bundle.outputs.cache-hit != 'true'
@@ -104,20 +114,21 @@ jobs:
       #     node-version: 18
       #     cache: "yarn"
 
-      # - name: Check dependency cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-      #     key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
-
-      # - name: Check bundle cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ${{ env.CACHED_BUILD_PATH }}
-      #     key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
+        
+      - name: Check dependency cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+
+      - name: Check bundle cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -133,4 +144,3 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-
