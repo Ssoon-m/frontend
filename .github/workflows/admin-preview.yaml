@@ -74,7 +74,7 @@ jobs:
       - name: Check if .next folder changed
         id: check-next-folder
         run: |
-          if git diff --name-only HEAD~1 HEAD | grep -q "^apps/admin/.next/"; then
+          if git diff --name-only HEAD~1 HEAD | grep -q "^apps/admin/"; then
             echo "::set-output name=changed::true"
           else
             echo "::set-output name=changed::false"
@@ -113,7 +113,6 @@ jobs:
       #   with:
       #     node-version: 18
       #     cache: "yarn"
-
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
