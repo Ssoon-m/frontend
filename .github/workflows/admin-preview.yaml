@@ -36,9 +36,20 @@ jobs:
         id: compute_lockfile_hash
         run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
 
+
+      - name: Restore node_modules cache
+        id: restore_dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+            ${{ runner.os }}-
+
       - name: Install dependencies
         if: steps.restore_dependencies.outputs.cache-hit != 'true'
-        run: yarn install
+        run: yarn install      
 
     outputs:
       dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
@@ -68,22 +79,18 @@ jobs:
       - name: Build
         run: yarn build --filter=admin...
 
-      - name: Restore node_modules cache
-        id: restore_dependencies
+      - name: 캐시된 종속성 저장
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
-            ${{ runner.os }}-
       # - name: Check build cache
       #   uses: actions/cache@v3
       #   id: cache_built_packages
       #   with:
       #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
       #     key: ${{ env.BUILD_CACHE_KEY }}
-
+      
       - name: Lint
         run: yarn lint
     outputs:
