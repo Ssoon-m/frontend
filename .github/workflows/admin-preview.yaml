@@ -3,7 +3,7 @@ name: Vercel Admin Preview
 env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
   BUILD_CACHE_KEY: ${{ github.sha }}
-  CACHED_BUILD_PATH: apps/admin/.next
+  CACHED_BUILD_PATH: ${{ github.workspace }}/apps/admin/.next
 on:
   push:
     branches: ["main"]
@@ -72,9 +72,9 @@ jobs:
   Admin-Deploy-Preview:
     needs: Build-Prj
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/admin
+    # defaults:
+    #   run:
+    #     working-directory: apps/admin
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
