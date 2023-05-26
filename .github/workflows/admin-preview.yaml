@@ -2,7 +2,7 @@ name: Vercel Admin Preview
 
 env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
-  BUILD_CACHE_DEPENDENCY_KEYS: bundle-key
+  BUILD_CACHE_DEPENDENCY_KEYS: ${{ github.sha }}
   CACHED_BUILD_PATH: ${{ github.workspace }}/apps/admin/.next
 on:
   push:
@@ -86,7 +86,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ github.ref_name }}
 
       - name: Build DEV bundle
         if: steps.restore_bundle.outputs.cache-hit != 'true'
@@ -96,7 +96,7 @@ jobs:
         run: yarn lint
 
   Admin-Deploy-Preview:
-    needs: [job_install_dependencies, Build-Prj]
+    needs: [Build-Prj]
     runs-on: ubuntu-latest
     # defaults:
     #   run:
@@ -117,20 +117,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Check dependency cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
-
       - name: Check bundle cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ github.ref_name }}
 
       - name: Build DEV bundle
-        run: yarn build --filter=admin... # 무조건 풀 캐싱, pull 직전에 turbo run build를 해줘야 종속성 오류가 안 꼬임
+        run: yarn build --filter=admin... # 무조건 풀 캐싱 적용 되는 부분임, pull 직전에 turbo run build를 해줘야 종속성 오류가 안 꼬임
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
