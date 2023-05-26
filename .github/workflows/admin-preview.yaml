@@ -37,7 +37,6 @@ jobs:
         id: compute_lockfile_hash
         run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
 
-      - name: Install dependencies
       - name: Restore node_modules cache
         id: restore_dependencies
         uses: actions/cache@v3
@@ -48,11 +47,14 @@ jobs:
             ${{ runner.os }}-modules-
             ${{ runner.os }}-
 
+      - name: Install dependencies
         if: steps.restore_dependencies.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: Build
         run: yarn build --filter=admin...
+
+      
 
       - name: Lint
         run: yarn lint
