@@ -1,7 +1,7 @@
 name: Vercel Admin Preview
 
 env:
-  CACHED_DEPENDENCY_PATHS: "**/node_modules"
+  CACHED_DEPENDENCY_PATH: "**/node_modules"
   BUILD_CACHE_KEY: ${{ github.sha }}
   CACHED_BUILD_PATH: ${{ github.workspace }}/apps/admin/.next
 on:
@@ -35,7 +35,7 @@ jobs:
         id: restore_dependencies
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          path: ${{ env.CACHED_DEPENDENCY_PATH }}
           key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
           restore-keys: |
             ${{ runner.os }}-modules-
@@ -66,7 +66,7 @@ jobs:
       - name: Check dependencies cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          path: ${{ env.CACHED_DEPENDENCY_PATH }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Restore bundle
