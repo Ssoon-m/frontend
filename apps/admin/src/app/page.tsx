@@ -10,7 +10,7 @@ export default function Home() {
         <Button />
         <div className="brandblue ui-brandblue bg-brandblue">
           tttttttttttttttttttttttttttttteeeeeeeeeeeeeeeeeeeeeeeesssssssssstttttttt
-          이러면 캐싱 어떻게 도리까?
+          이러면 캐싱 어떻게 도리까?어드민어드민!!
         </div>
       </div>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
