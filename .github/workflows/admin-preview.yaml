@@ -20,7 +20,6 @@ on:
 jobs:
   Build-Prj:
     name: Build
-    needs: install_dependencies
     runs-on: ubuntu-latest
 
     steps:
