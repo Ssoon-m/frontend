@@ -50,8 +50,6 @@ jobs:
       - name: Restore bundle
         id: restore_bundle
         uses: actions/cache@v3
-        env:
-          
         with:
           path: ${{ env.CACHED_BUILD_PATH }}
           key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
