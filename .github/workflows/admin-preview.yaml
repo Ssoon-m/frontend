@@ -74,7 +74,7 @@ jobs:
       - name: Check if .next folder changed
         id: check-next-folder
         run: |
-          if [[ $(git diff --name-only HEAD~1 HEAD) =~ ^/apps/admin/.next/.*$ ]]; then
+          if git diff --name-only HEAD~1 HEAD | grep -q "^apps/admin/.next/"; then
             echo "::set-output name=changed::true"
           else
             echo "::set-output name=changed::false"
