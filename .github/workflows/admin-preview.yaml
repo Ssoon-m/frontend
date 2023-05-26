@@ -18,40 +18,6 @@ on:
       - .github/workflows/admin-preview.yml
 
 jobs:
-  install_dependencies:
-    name: Install Dependencies
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
-
-      - name: Compute dependencies hash key
-        id: compute_lockfile_hash
-        run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
-
-      - name: Install dependencies
-        if: steps.restore_dependencies.outputs.cache-hit != 'true'
-        run: yarn install
-
-      - name: Restore node_modules cache
-        id: restore_dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
-          restore-keys: |
-            ${{ runner.os }}-modules-
-            ${{ runner.os }}-
-
-    outputs:
-      dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
   Build-Prj:
     name: Build
     needs: install_dependencies
@@ -68,40 +34,32 @@ jobs:
           node-version: 18
           cache: "yarn"
 
-      - name: Check dependency cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
+      - name: Compute dependencies hash key
+        id: compute_lockfile_hash
+        run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
+
+      - name: Install dependencies
+        if: steps.restore_dependencies.outputs.cache-hit != 'true'
+        run: yarn install
 
       - name: Build
         run: yarn build --filter=admin...
 
-      - name: Save built dependencies cache
+      - name: Restore node_modules cache
+        id: restore_dependencies
         uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-built-${{ needs.install_dependencies.outputs.dependency_cache_key }}
-          restore-keys: ${{ runner.os }}-built-
-
-
-      - name: Save .cache directory cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-cache-${{ needs.install_dependencies.outputs.dependency_cache_key }}
-          restore-keys: ${{ runner.os }}-cache-
-      # - name: Check build cache
-      #   uses: actions/cache@v3
-      #   id: cache_built_packages
-      #   with:
-      #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-      #     key: ${{ env.BUILD_CACHE_KEY }}
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+            ${{ runner.os }}-
 
       - name: Lint
         run: yarn lint
+
     outputs:
-      dependency_cache_key: ${{ needs.install_dependencies.outputs.dependency_cache_key }}
+      dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
 
   Admin-Deploy-Preview:
     needs: [install_dependencies, Build-Prj]
