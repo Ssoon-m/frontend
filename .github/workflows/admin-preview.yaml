@@ -63,7 +63,6 @@ jobs:
 
       - name: Lint
         run: yarn lint
-
     outputs:
       dependency_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
 
