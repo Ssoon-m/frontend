@@ -72,13 +72,15 @@ jobs:
   Admin-Deploy-Preview:
     needs: Build-Prj
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/admin
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        working-directory: apps/admin
         with:
           fetch-depth: 2
           # working-directory를 사용하여 작업 디렉토리 설정
