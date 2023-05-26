@@ -129,6 +129,9 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
 
+      - name: Build DEV bundle
+        run: yarn build --filter=admin...
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       # - name: Print current directory contents
