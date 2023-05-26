@@ -86,7 +86,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Build DEV bundle
         if: steps.restore_bundle.outputs.cache-hit != 'true'
@@ -127,7 +127,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Build DEV bundle
         run: yarn build --filter=admin... # 무조건 풀 캐싱, pull 직전에 turbo run build를 해줘야 종속성 오류가 안 꼬임
