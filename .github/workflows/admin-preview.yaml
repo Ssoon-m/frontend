@@ -1,7 +1,7 @@
 name: Vercel Admin Preview
 
 env:
-  CACHED_DEPENDENCY_PATH: "**/node_modules"
+  CACHED_DEPENDENCY_PATHS: "**/node_modules"
   BUILD_CACHE_KEY: ${{ github.sha }}
   CACHED_BUILD_PATH: ${{ github.workspace }}/apps/admin/.next
 on:
@@ -35,7 +35,7 @@ jobs:
         id: restore_dependencies
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
           restore-keys: |
             ${{ runner.os }}-modules-
@@ -66,7 +66,7 @@ jobs:
       - name: Check dependencies cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Restore bundle
@@ -110,7 +110,7 @@ jobs:
       - name: Check dependency cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Check bundle cache
@@ -126,7 +126,7 @@ jobs:
         run: vercel pull --yes --debug --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Print current directory contents
-        run: ls
+        run: ls node_modules
 
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
