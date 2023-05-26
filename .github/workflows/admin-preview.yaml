@@ -17,7 +17,6 @@ on:
       - .nvmrc
       - "*.config.js"
       - .github/workflows/admin-preview.yml
-
 jobs:
   Build-Prj:
     name: Build
