@@ -46,7 +46,7 @@ jobs:
         run: yarn install
 
     outputs:
-      dependencies_cache_key: dependencies-${{ runner.os }}-yarn-${{ steps.compute_lockfile_hash.outputs.key }}
+      dependencies_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
   Build-Prj:
     name: Build
     needs: job_install_dependencies
