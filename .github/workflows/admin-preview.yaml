@@ -97,33 +97,30 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-          # working-directory를 사용하여 작업 디렉토리 설정
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
+      # - name: Setup Node.js environment
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
+      #     cache: "yarn"
 
-      - name: Check dependency cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+      # - name: Check dependency cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+      #     key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
-      - name: Check bundle cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_BUILD_PATH }}
-          key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
+      # - name: Check bundle cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ${{ env.CACHED_BUILD_PATH }}
+      #     key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --debug --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Print current directory contents
         run: ls node_modules
