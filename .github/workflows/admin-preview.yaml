@@ -78,6 +78,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+         # working-directory를 사용하여 작업 디렉토리 설정
+        working-directory: apps/admin
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
@@ -103,8 +107,14 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --debug --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Print current directory contents
+        run: ls
+        
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Print current directory contents after build
+        run: ls
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
