@@ -1,10 +1,9 @@
 name: Vercel Admin Preview
 
 env:
-  CACHED_DEPENDENCY_PATHS: |
-    "**/node_modules"
-    node_modules/.cache
+  CACHED_DEPENDENCY_PATHS: "**/node_modules"
   BUILD_CACHE_KEY: ${{ github.sha }}
+  CACHED_BUILD_PATH: apps/admin/.next
 on:
   push:
     branches: ["main"]
@@ -48,20 +47,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-modules-
             ${{ runner.os }}-
-            
 
-      - name: Save .cache directory cache
+      - name: Restore bundle
+        id: restore_bundle
         uses: actions/cache@v3
+        env:
+          
         with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-cache-${{ steps.compute_lockfile_hash.outputs.key }}
-          restore-keys: ${{ runner.os }}-cache-
+          path: ${{ env.CACHED_BUILD_PATH }}
+          key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
+          restore-keys: |
+            build-${{ env.BUILD_CACHE_KEY }}-
 
       - name: Install dependencies
         if: steps.restore_dependencies.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: Build
+      - name: Build DEV bundle
+        if: steps.restore_bundle.outputs.cache-hit != 'true'
         run: yarn build --filter=admin...
 
       - name: Lint
@@ -91,8 +94,11 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.Build-Prj.outputs.dependency_cache_key }}
 
-      - name: Build
-        run: yarn build --filter=admin...
+      - name: Check bundle cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_BUILD_PATH }}
+          key: build-${{ env.BUILD_CACHE_KEY }}-${{ github.ref_name }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
