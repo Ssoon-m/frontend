@@ -54,8 +54,6 @@ jobs:
       - name: Build
         run: yarn build --filter=admin...
 
-      
-
       - name: Lint
         run: yarn lint
 
