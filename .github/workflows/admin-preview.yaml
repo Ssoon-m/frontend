@@ -48,7 +48,25 @@ jobs:
     outputs:
       dependencies_cache_key: ${{ runner.os }}-modules-${{ steps.compute_lockfile_hash.outputs.key }}
 
-  Build-Prj:
+  job_lint:
+    name: Lint
+    needs: job_install_dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Check dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+
+      - name: Lint
+        run: yarn lint
+
+  job_build:
     name: Build
     needs: job_install_dependencies
     runs-on: ubuntu-latest
@@ -58,11 +76,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      # - name: Setup Node.js environment
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
-      #     cache: "yarn"
 
       - name: Check dependencies cache
         uses: actions/cache@v3
@@ -70,15 +83,6 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
-      # - name: Check if .next folder changed
-      #   id: check-next-folder
-      #   run: |
-      #     if git diff --name-only HEAD~1 HEAD | grep -q "^apps/admin/"; then
-      #       echo "::set-output name=changed::true"
-      #     else
-      #       echo "::set-output name=changed::false"
-      #     fi
-      # if: steps.check-next-folder.outputs.changed == 'true'
       - name: Restore bundle
         id: restore_bundle
         uses: actions/cache@v3
@@ -90,28 +94,16 @@ jobs:
         if: steps.restore_bundle.outputs.cache-hit != 'true'
         run: yarn build --filter=admin...
 
-      - name: Lint
-        run: yarn lint
-
-
-  Admin-Deploy-Preview:
-    needs: [Build-Prj]
+  jon_deploy_preview:
+    needs: Build-Prj
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: apps/admin
+
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ADMIN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-
-      # - name: Setup Node.js environment
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
-      #     cache: "yarn"
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -127,14 +119,9 @@ jobs:
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      # - name: Print current directory contents
-      #   run: ls node_modules
 
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Print current directory contents after build
-        run: ls
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
