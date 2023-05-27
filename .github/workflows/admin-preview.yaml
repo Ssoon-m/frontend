@@ -94,7 +94,7 @@ jobs:
         if: steps.restore_bundle.outputs.cache-hit != 'true'
         run: yarn build --filter=admin...
 
-  jon_deploy_preview:
+  job_deploy_preview:
     needs: job_build
     runs-on: ubuntu-latest
 
