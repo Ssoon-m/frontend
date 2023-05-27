@@ -4,8 +4,9 @@ env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
   BUILD_CACHE_DEPENDENCY_KEYS: ${{ github.sha }}
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    branches:
+      - main
     paths:
       - apps/admin/**
       - packages/**
@@ -115,10 +116,10 @@ jobs:
         run: yarn build --filter=admin... # 무조건 풀 캐싱 적용 되는 부분임, pull 직전에 turbo run build를 해줘야 종속성 오류가 안 꼬임
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

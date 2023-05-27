@@ -7,8 +7,6 @@ env:
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     types: [opened, synchronize]
     paths:
@@ -51,7 +49,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build --filter=web... --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
+        run: yarn build -https://www.youtube.com/watch?v=SMI8DuSyYhw-filter=web... --team=${{ env.TURBO_TEAM }} --token=${{ env.TURBO_TOKEN }}
 
       - name: Lint
         run: yarn lint
