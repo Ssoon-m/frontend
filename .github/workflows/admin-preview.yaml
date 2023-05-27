@@ -95,7 +95,7 @@ jobs:
         run: yarn build --filter=admin...
 
   jon_deploy_preview:
-    needs: Build-Prj
+    needs: job_build
     runs-on: ubuntu-latest
 
     env:
