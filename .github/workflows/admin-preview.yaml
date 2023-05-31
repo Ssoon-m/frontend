@@ -4,16 +4,17 @@ env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
   BUILD_CACHE_DEPENDENCY_KEYS: ${{ github.sha }}
 on:
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - apps/admin/**
-      - packages/**
-      - turbo.json
-      - .npmrc
-      - .nvmrc
-      - "*.config.js"
-      - .github/workflows/admin-preview.yml
+  push:
+    pull_request:
+      types: [opened, synchronize]:
+      paths:
+        - apps/admin/**
+        - packages/**
+        - turbo.json
+        - .npmrc
+        - .nvmrc
+        - "*.config.js"
+        - .github/workflows/admin-preview.yml
 
 jobs:
   job_install_dependencies:
