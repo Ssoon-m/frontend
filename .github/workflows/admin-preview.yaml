@@ -13,7 +13,6 @@ on:
       - .nvmrc
       - "*.config.js"
       - .github/workflows/admin-preview.yml
-
 jobs:
   job_install_dependencies:
     name: Install dependencies
