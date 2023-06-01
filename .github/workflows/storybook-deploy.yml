@@ -1,19 +1,19 @@
-name: Web preview workflow
-
+# Name of our action
+name: "Chromatic storybook workflow"
+# The event that will trigger the action
 env:
   CACHED_DEPENDENCY_PATHS: "**/node_modules"
-  BUILD_CACHE_DEPENDENCY_KEYS: ${{ github.sha }}-web-preview
 
 on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - "apps/web/**"
+      - "apps/**"
       - "packages/**"
       - .npmrc
       - .nvmrc
       - "*.config.js"
-      - .github/workflows/web-preview.yml
+      - .github/workflows/storybook-deploy.yml
 
 jobs:
   job_install_dependencies:
@@ -63,16 +63,18 @@ jobs:
       - name: Lint
         run: yarn lint
 
-  job_build:
-    name: Build
-    needs: job_install_dependencies
+  job_publish_to_chromatic:
+    name: Publish to chromatic
+    needs: [job_install_dependencies, job_lint]
     runs-on: ubuntu-latest
+    env:
+      CHROMACTIC_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Check dependencies cache
         uses: actions/cache@v3
@@ -80,54 +82,14 @@ jobs:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
-      - name: Restore bundle
-        id: restore_bundle
-        uses: actions/cache@v3
+      - name: Publish to Chromatic
+        id: chromatic_url
+        uses: chromaui/action@v1
+        # Options required for Chromatic's GitHub Action
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ github.ref_name }}
-
-      - name: Build DEV bundle
-        if: steps.restore_bundle.outputs.cache-hit != 'true'
-        run: yarn build --filter=web...
-
-  job_deploy_preview:
-    name: Deploy to Preview
-    needs: [job_install_dependencies, job_lint, job_build]
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Check bundle cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ env.BUILD_CACHE_DEPENDENCY_KEYS }}-${{ github.ref_name }}
-
-      - name: Build DEV bundle
-        run: yarn build --filter=web... # 무조건 풀 캐싱 적용 되는 부분임, pull 직전에 turbo run build를 해줘야 종속성이 안 꼬임
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > web_deployment_url.txt
-
-      - name: Read web URL from file
-        id: read-url
-        run: |
-          url=$(cat web_deployment_url.txt)
-          echo "PREVIEW_URL=${url}" >> $GITHUB_OUTPUT
+          #👇 Chromatic projectToken, see https://storybook.js.org/tutorials/design-systems-for-developers/react/ko/review/ to obtain it
+          projectToken: ${{ env.CHROMACTIC_TOKEN }}
+          workingDir: packages/ui
 
       - name: Create Pull Request Comment
         uses: actions/github-script@v6
@@ -138,11 +100,17 @@ jobs:
           github-token: ${{ secrets.ACCESS_TOKEN_PR_COMMENT }}
           script: |
             const prNumber = context.payload.pull_request.number;
-            const url = "${{ steps.read-url.outputs.PREVIEW_URL }}";
+            const buildUrl = "${{ steps.chromatic_url.outputs.url }}";
+            const storybookUrl = "${{ steps.chromatic_url.outputs.storybookUrl }}";
             const { data: comment } = await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: `Web Preview: ${url}`,
+              body: `## 🚀 Chromatic 및 Storybook 배포 완료 🚀
+
+            ✨ 배포 결과를 확인해주세요!
+
+            🎨 [Chromatic](${buildUrl}) - 시각적 테스트 및 UI 리뷰관련 URL
+            📚 [Storybook](${storybookUrl}) - 스토리북 배포 URL`
             });
             console.log(`Comment created: ${comment.html_url}`);
