@@ -4,14 +4,15 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint-fix": "turbo run lint-fix --",
+    "lint-fix:prettier": "prettier --write \"./**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
     "prepare": "husky install",
     "run-lint-staged": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write -u"
+      "yarn lint-fix",
+      "yarn lint-fix:prettier"
     ]
   },
   "devDependencies": {
@@ -19,12 +20,13 @@
     "@commitlint/config-conventional": "^17.6.3",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.2",
     "prettier": "^2.5.1",
     "turbo": "^1.9.3"
   },
-  "name": "frontend",
+  "name": "handpyeon-web",
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
