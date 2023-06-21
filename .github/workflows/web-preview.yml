@@ -1,18 +1,18 @@
 name: Web preview workflow
 
 env:
-  CACHED_DEPENDENCY_PATHS: "**/node_modules"
+  CACHED_DEPENDENCY_PATHS: '**/node_modules'
   BUILD_CACHE_DEPENDENCY_KEYS: ${{ github.sha }}-web-preview
 
 on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - "apps/web/**"
-      - "packages/**"
+      - 'apps/web/**'
+      - 'packages/**'
       - .npmrc
       - .nvmrc
-      - "*.config.js"
+      - '*.config.js'
       - .github/workflows/web-preview.yml
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
 
       - name: Compute dependencies hash key
         id: compute_lockfile_hash
-        run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
-        #run: echo "key=${{ hashFiles('**/yarn.lock') }}" >> $GITHUB_OUTPUT
+        # run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
+        run: echo "key=${{ hashFiles('**/yarn.lock') }}" >> $GITHUB_OUTPUT
 
       - name: Restore node_modules cache
         id: restore_dependencies
