@@ -1,6 +1,7 @@
 import './globals.css';
 import 'ui/styles.css';
 import { Inter } from 'next/font/google';
+import qs from 'qs';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -28,6 +28,7 @@ jobs:
       - name: Compute dependencies hash key
         id: compute_lockfile_hash
         run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
+        #run: echo "key=${{ hashFiles('**/yarn.lock') }}" >> $GITHUB_OUTPUT
 
       - name: Restore node_modules cache
         id: restore_dependencies
