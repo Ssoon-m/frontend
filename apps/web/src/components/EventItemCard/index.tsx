@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Convenience } from '@/app/type';
+import { Convenience, EventCategory } from '@/app/type';
 import { formatNumberWithComma } from '@/utils/numberFormatter';
 
 interface EventItem {
@@ -8,12 +8,12 @@ interface EventItem {
   imageUrl: string;
   price: number;
   title: string;
-  convenience: 'ALL' | 'CU' | 'GS25' | '7Eleven' | 'Emart24';
+  convenience: Convenience;
 }
 
 const EventTypeTag: Record<
   EventItem['eventType'],
-  { text: string; bg: string }
+  { text: EventCategory; bg: string }
 > = {
   ONE_PLUS_ONE: { text: '1+1', bg: 'bg-[#73F69D]' },
   TWO_PLUS_ONE: { text: '2+1', bg: 'bg-[#E2F981]' },
@@ -30,7 +30,7 @@ const EventItemCard = ({
 }: Props) => {
   return (
     <div className="w-[calc(50%_-_9px)]">
-      <div className="mb-[12px] h-[164px] w-full rounded-[9px] border-2 border-b-[4px] border-r-[4px] border-black p-[5px]">
+      <div className="mb-[12px] aspect-square w-full rounded-[9px] border-2 border-b-[4px] border-r-[4px] border-black p-[5px]">
         <div className="relative flex h-full w-full items-center justify-center">
           <div
             className={`absolute left-0 top-0 z-10 flex h-[24px] w-min items-center justify-center whitespace-nowrap rounded-[20px] border border-black px-[10px] ${EventTypeTag[eventType].bg}`}

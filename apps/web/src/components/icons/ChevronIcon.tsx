@@ -1,4 +1,4 @@
-import Chevron from '@/assets/chevron.svg';
+import Chevron from 'public/icons/chevron.svg';
 
 const ChevronIcon = () => {
   return <Chevron />;
